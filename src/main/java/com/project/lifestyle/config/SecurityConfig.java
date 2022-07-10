@@ -47,8 +47,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .antMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated();
+                      .antMatchers("/api/auth/registration",
+                              "/api/auth/accountVerification/**",
+                              "/api/auth/login",
+                              "/api/auth/refresh/token"
+                              , "/api/auth/logout"
+                                )
+                                .permitAll()
+                                .anyRequest().authenticated()
+                                .and().httpBasic();
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
@@ -58,7 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(
                 username -> userRepository.findByUsername(username)
                         .orElseThrow(
-                                () -> new UsernameNotFoundException("User " + username + " not found.")));
+                                () -> new UsernameNotFoundException("User " + username + " not found.")))
+                                .passwordEncoder(passwordEncoder());
     }
 
 }
