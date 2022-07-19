@@ -122,4 +122,7 @@ public class User implements UserDetails {
         this.roles.add(role);
     }
 
+    public void setCreated(Instant created) {
+        this.created = created;
+    }
 }

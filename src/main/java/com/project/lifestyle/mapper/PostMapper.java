@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public abstract class PostMapper {
+public abstract class PostMapper{
 
     @Mapping(target = "createdDate", expression = "java(java.time.Instant.now())")
     @Mapping(target = "description", source = "postRequest.description")
@@ -24,4 +24,5 @@ public abstract class PostMapper {
     String getDuration(Post post) {
         return TimeAgo.using(post.getCreatedDate().toEpochMilli());
     }
+
 }

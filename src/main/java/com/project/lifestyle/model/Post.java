@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -25,7 +26,7 @@ public class Post {
     @Nullable
     private String url;
     @Nullable
-    @Lob
+    @Lob @Type(type = "org.hibernate.type.TextType")
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")

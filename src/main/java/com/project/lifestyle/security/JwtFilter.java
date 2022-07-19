@@ -1,6 +1,7 @@
 package com.project.lifestyle.security;
 
 import java.io.IOException;
+import java.time.Instant;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -90,7 +91,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String[] jwtSubject = subject.split(",");
 
         userDetails.setId(Long.parseLong(jwtSubject[0]));
-        userDetails.setEmail(jwtSubject[1]);
+        userDetails.setUsername(jwtSubject[1]);
 
         return userDetails;
     }
