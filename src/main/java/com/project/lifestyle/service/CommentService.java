@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -23,7 +24,7 @@ public class CommentService {
     private static final String POST_URL = "";
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final PostService postService;
+    private final AuthService authService;
     private final CommentMapper commentMapper;
     private final CommentRepository commentRepository;
     private final MailService mailService;
@@ -31,10 +32,10 @@ public class CommentService {
     public void save(CommentDto commentDto) {
         Post post = postRepository.findById(commentDto.getPostId())
                 .orElseThrow(() -> new UsernameNotFoundException("Post with id = " + commentDto.getPostId().toString() + " not found"));
-        Comment comment = commentMapper.map(commentDto, post, postService.getUser());
+        Comment comment = commentMapper.map(commentDto, post, authService.getUser());
         commentRepository.save(comment);
 
-        sendCommentNotification(post.getUser());
+        sendCommentNotification(authService.getUser());
     }
 
     private void sendCommentNotification(User user) {
@@ -42,7 +43,7 @@ public class CommentService {
     }
 
     public List<CommentDto> getAllCommentsForPost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new UsernameNotFoundException("Post with id = " + postId.toString() + " not found"));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new UsernameNotFoundException("Post with id = " + postId + " not found"));
         return commentRepository.findByPost(post)
                 .stream()
                 .map(commentMapper::mapToDto).collect(toList());

@@ -98,8 +98,8 @@ public class AuthService {
         String token = jwtUtil.generateAccessToken(getUser(refreshTokenRequest.getUsername()) );
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
-                .username(refreshTokenRequest.getUsername())
                 .refreshToken(refreshTokenRequest.getRefreshToken())
+                .username(refreshTokenRequest.getUsername())
                 .expiresAt(Instant.now().plusMillis(jwtUtil.getEXPIRE_DURATION()))
                 .build();
     }
@@ -107,7 +107,11 @@ public class AuthService {
     ///////////////////////////////////////////////
     @Transactional
     public void deleteRefreshToken(String token) {
-        refreshTokenRepository.updateToken(token);
+        jwtUtil.generateAccessToken(getUser(userRepository.findByToken(token).getUsername()));
+        AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .expiresAt(Instant.now().plusMillis(jwtUtil.getEXPIRE_DURATION()))
+                .build();
     }
     ////////////////////////////////////////////////
 
@@ -119,5 +123,12 @@ public class AuthService {
     public User getUser(String username) {
             return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + username));
+    }
+
+    @Transactional(readOnly = true)
+    public User getUser() {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User with name - " + principal.getUsername() + " not found"));
     }
 }

@@ -1,16 +1,14 @@
 package com.project.lifestyle.repository;
 
+import com.project.lifestyle.model.Post;
 import com.project.lifestyle.model.User;
+import com.project.lifestyle.model.Vote;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface RefreshTokenRepository extends JpaRepository<User,Long> {
-    Optional<User> findByToken(String token);
-
-
+public interface VoteRepository extends JpaRepository<Vote,Long> {
+    Optional<Vote> findTopByPostAndUserOrderByVoteIdDesc(Post post, User currentUser);
 }
