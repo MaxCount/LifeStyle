@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-    
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
@@ -57,6 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 .permitAll()
                       .antMatchers(HttpMethod.GET, "/api/posts/")
                       .permitAll()
+                      .antMatchers("/api/admin-page/**").hasAnyAuthority("USER","ADMIN")
+
                                 .anyRequest().authenticated()
                                 .and().httpBasic();
 

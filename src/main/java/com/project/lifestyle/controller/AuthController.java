@@ -6,7 +6,6 @@ import com.project.lifestyle.dto.RefreshTokenRequest;
 import com.project.lifestyle.dto.RegisterRequest;
 import com.project.lifestyle.model.User;
 import com.project.lifestyle.service.AuthService;
-//import com.project.lifestyle.service.RefreshTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +36,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login (@RequestBody LoginRequest loginRequest){
-        return ResponseEntity.ok(authService.getUser(loginRequest.getUsername()));
+    public AuthenticationResponse login (@RequestBody LoginRequest loginRequest){
+        return authService.login(loginRequest);
     }
 
     @PostMapping("/refresh/token")
@@ -46,11 +45,9 @@ public class AuthController {
         return authService.refreshToken(refreshTokenRequest);
     }
 
-    //////////////////////////////////////////////
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         authService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
         return ResponseEntity.status(OK).body("Refresh Token Deleted Successfully!!");
     }
-    ////////////////////////////////////////////////
 }

@@ -2,6 +2,7 @@ package com.project.lifestyle.service;
 
 
 import com.project.lifestyle.dto.AuthenticationResponse;
+import com.project.lifestyle.dto.LoginRequest;
 import com.project.lifestyle.dto.RefreshTokenRequest;
 import com.project.lifestyle.dto.RegisterRequest;
 import com.project.lifestyle.model.Role;
@@ -39,6 +40,7 @@ public class AuthService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final AuthenticationManager authenticationManager;
 
     @Transactional
     public User registration(RegisterRequest registerRequest){
@@ -104,16 +106,10 @@ public class AuthService {
                 .build();
     }
 
-    ///////////////////////////////////////////////
     @Transactional
     public void deleteRefreshToken(String token) {
-        jwtUtil.generateAccessToken(getUser(userRepository.findByToken(token).getUsername()));
-        AuthenticationResponse.builder()
-                .authenticationToken(token)
-                .expiresAt(Instant.now().plusMillis(jwtUtil.getEXPIRE_DURATION()))
-                .build();
+       userRepository.findByToken(token).setToken(null);
     }
-    ////////////////////////////////////////////////
 
     public boolean isLoggedIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -131,4 +127,18 @@ public class AuthService {
         return userRepository.findByUsername(principal.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User with name - " + principal.getUsername() + " not found"));
     }
+
+    public AuthenticationResponse login(LoginRequest loginRequest) {
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        String token = jwtUtil.generateAccessToken(getUser());
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(generateVerificationToken(getUser()))
+                .expiresAt(Instant.now().plusMillis(jwtUtil.getEXPIRE_DURATION()))
+                .username(loginRequest.getUsername())
+                .build();
+    }
+
 }

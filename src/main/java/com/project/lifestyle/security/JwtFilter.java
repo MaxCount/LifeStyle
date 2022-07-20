@@ -93,6 +93,7 @@ public class JwtFilter extends OncePerRequestFilter {
         userDetails.setId(Long.parseLong(jwtSubject[0]));
         userDetails.setUsername(jwtSubject[1]);
 
+
         return userDetails;
     }
 }
