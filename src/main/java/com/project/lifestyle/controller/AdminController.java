@@ -1,11 +1,12 @@
 package com.project.lifestyle.controller;
 
 import com.project.lifestyle.model.User;
+import com.project.lifestyle.repository.UserRepository;
 import com.project.lifestyle.service.AdminService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,10 +16,18 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
+    private final UserRepository userRepository;
 
     @GetMapping("/users")
-    public List<User> listUsers() {
-
+    private List<User> listUsers() {
         return adminService.listAll();
     }
+
+    @PostMapping("/set-admin-role/{username}")
+    private ResponseEntity<String> setAdminRole(@PathVariable String username){
+        adminService.setAdminRole(username);
+        return ResponseEntity.status(HttpStatus.OK).body("Admin role set successfully " + userRepository.findByUsername(username).get().getRoles());
+    }
+
+
 }
