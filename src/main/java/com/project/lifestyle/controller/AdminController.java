@@ -29,5 +29,10 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body("Admin role set successfully " + userRepository.findByUsername(username).get().getRoles());
     }
 
+    @PostMapping("/deleteUser/{id}")
+    private ResponseEntity<String> deleteUser(@PathVariable Long id){
+        adminService.deleteUser(id);
+        return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
+    }
 
 }
