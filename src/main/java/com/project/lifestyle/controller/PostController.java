@@ -19,22 +19,23 @@ public class PostController {
 
     private final PostService postService;
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping
     public ResponseEntity<Void> createPost(@RequestBody PostRequest postRequest) {
         postService.save(postRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPosts(){
         return status(HttpStatus.OK).body(postService.getAllPosts());
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
         return status(HttpStatus.OK).body(postService.getPost(id));
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("by-user/{name}")
     public ResponseEntity<List<PostResponse>> getPostsByUsername(@PathVariable String name) {
         return status(HttpStatus.OK).body(postService.getPostsByUsername(name));

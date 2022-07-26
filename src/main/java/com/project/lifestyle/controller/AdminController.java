@@ -35,4 +35,9 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
     }
 
+    @PostMapping("/deletePost/{id}")
+    private ResponseEntity<String>deletePost(@PathVariable Long id){
+        adminService.deletePost(id);
+        return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
+    }
 }

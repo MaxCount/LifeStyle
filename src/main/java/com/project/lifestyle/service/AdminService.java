@@ -2,6 +2,7 @@ package com.project.lifestyle.service;
 
 import com.project.lifestyle.model.Role;
 import com.project.lifestyle.model.User;
+import com.project.lifestyle.repository.PostRepository;
 import com.project.lifestyle.repository.RoleRepository;
 import com.project.lifestyle.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ public class AdminService {
     private final UserRepository userRepository;
     private final AuthService authService;
     private final RoleRepository roleRepository;
+    private final PostRepository postRepository;
 
     public List<User> listAll(){
         return userRepository.findAll();
@@ -29,6 +31,9 @@ public class AdminService {
     }
     public void deleteUser(Long id){
         userRepository.deleteById(id);
+    }
+    public void deletePost(Long id){
+        postRepository.deleteById(id);
     }
 
 }
