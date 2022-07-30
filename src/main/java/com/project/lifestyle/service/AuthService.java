@@ -138,7 +138,16 @@ public class AuthService {
                 .refreshToken(generateVerificationToken(getUser()))
                 .expiresAt(Instant.now().plusMillis(jwtUtil.getEXPIRE_DURATION()))
                 .username(loginRequest.getUsername())
+                .isAdmin(isAdmin(loginRequest.getUsername()))
                 .build();
     }
-
+    public boolean isAdmin(String username){
+        User user = getUser(username);
+        for (Role role : user.getRoles()){
+            if (role == roleRepository.findByName("ADMIN")){
+                return true;
+            }
+        }
+        return false;
+    }
 }

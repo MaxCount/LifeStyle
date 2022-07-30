@@ -3,6 +3,7 @@ package com.project.lifestyle.controller;
 import com.project.lifestyle.model.User;
 import com.project.lifestyle.repository.UserRepository;
 import com.project.lifestyle.service.AdminService;
+import com.project.lifestyle.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ public class AdminController {
 
     private final AdminService adminService;
     private final UserRepository userRepository;
+    private final AuthService authService;
 
     @GetMapping("/users")
     private List<User> listUsers() {
@@ -39,5 +41,13 @@ public class AdminController {
     private ResponseEntity<String>deletePost(@PathVariable Long id){
         adminService.deletePost(id);
         return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
+    }
+    @GetMapping("/isAdmin/{username}")
+    private boolean isAdmin(@PathVariable String username){
+       return authService.isAdmin(username);
+    }
+    @GetMapping("/getUserByUsername/{username}")
+    public User getUserByUsername(@PathVariable String username){
+        return authService.getUser(username);
     }
 }

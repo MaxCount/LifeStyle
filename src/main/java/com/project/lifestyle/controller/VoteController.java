@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class VoteController {
 
     private final VoteService voteService;
-    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping
     public ResponseEntity<Void> vote(@RequestBody VoteDto voteDto) {
         voteService.vote(voteDto);

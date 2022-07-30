@@ -6,6 +6,7 @@ import com.project.lifestyle.repository.PostRepository;
 import com.project.lifestyle.repository.RoleRepository;
 import com.project.lifestyle.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
