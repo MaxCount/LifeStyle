@@ -35,7 +35,6 @@ public class User implements UserDetails {
     private boolean enabled;
 
     private String token;
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",

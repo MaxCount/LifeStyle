@@ -1,14 +1,16 @@
 package com.project.lifestyle.service;
 
+import com.project.lifestyle.dto.UsersResponse;
 import com.project.lifestyle.model.Role;
 import com.project.lifestyle.model.User;
 import com.project.lifestyle.repository.PostRepository;
 import com.project.lifestyle.repository.RoleRepository;
 import com.project.lifestyle.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,6 +22,20 @@ public class AdminService {
     private final RoleRepository roleRepository;
     private final PostRepository postRepository;
 
+    public List<UsersResponse> userModel(){
+        List<UsersResponse> arr = new ArrayList<>();
+        for (User user : userRepository.findAll()) {
+            arr.add(UsersResponse.builder()
+                 .userId(user.getUserId())
+                 .username(user.getUsername())
+                 .email(user.getEmail())
+                 .enabled(user.isEnabled())
+                 .token(user.getToken())
+                 .authorities(user.getAuthorities().toString())
+                 .build()) ;
+        }
+        return arr;
+    }
     public List<User> listAll(){
         return userRepository.findAll();
     }
@@ -33,8 +49,9 @@ public class AdminService {
     public void deleteUser(Long id){
         userRepository.deleteById(id);
     }
-    public void deletePost(Long id){
-        postRepository.deleteById(id);
+    @Transactional
+    public void deletePost(String postName){
+        postRepository.deleteByName(postName);
     }
 
 }

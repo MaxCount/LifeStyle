@@ -15,6 +15,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByUser(User user);
 
     @Modifying
-    @Query("delete from Post p where p.postId = ?1  ")
-    void deleteById(@NotNull Long id);
+    @Query("delete from Post p where p.postName = ?1  ")
+    void deleteByName(@NotNull String postName);
 }
