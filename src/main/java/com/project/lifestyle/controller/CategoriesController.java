@@ -1,14 +1,14 @@
 package com.project.lifestyle.controller;
 
 import com.project.lifestyle.dto.CategoriesRequest;
+import com.project.lifestyle.dto.CategoriesResponce;
 import com.project.lifestyle.service.CategoriesService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -21,5 +21,10 @@ public class CategoriesController {
     private ResponseEntity<String> setCategories(@RequestBody CategoriesRequest categoriesRequest){
         categoriesService.save(categoriesRequest);
         return new ResponseEntity<>("Categories set", HttpStatus.OK);
+    }
+
+    @GetMapping("/getCategoriesByUserId")
+    private List<CategoriesResponce> getCategoriesByUserId(){
+        return categoriesService.getCategoriesByUserId();
     }
 }
